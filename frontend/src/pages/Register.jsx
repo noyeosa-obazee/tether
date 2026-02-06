@@ -8,8 +8,8 @@ const Register = () => {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState("");
 
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -20,14 +20,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    // const toastId = toast.loading("Creating your account...");
+
+    if (formData.password !== formData.confirmPassword) {
+      // toast.error("Passwords do not match",{ id: toastId});
+      return;
+    }
 
     const result = await register(formData);
 
     if (result.success) {
+      // toast.success("Account created successfully",{ id: toastId})
       navigate("/login");
     } else {
-      setError(result.message || "Registration failed");
+      // toast.error(result.message || "Registration failed",{ id: toastId});
     }
   };
 
@@ -38,8 +44,6 @@ const Register = () => {
           <h2>Create Account</h2>
           <p>Join Tether today</p>
         </div>
-
-        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -73,6 +77,17 @@ const Register = () => {
               name="password"
               placeholder="Create a strong password"
               value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder=""
+              value={formData.confirmPassword}
               onChange={handleChange}
               required
             />

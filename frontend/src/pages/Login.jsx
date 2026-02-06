@@ -5,7 +5,6 @@ import "../App.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ identifier: "", password: "" });
-  const [error, setError] = useState("");
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -16,14 +15,15 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    // const toastId = toast.loading("Logging in...");
 
     const result = await login(formData.identifier, formData.password);
 
     if (result.success) {
+      // toast.success("Logged in successfully",{ id: toastId});
       navigate("/dashboard");
     } else {
-      setError(result.message || "Login failed");
+      // toast.error("Could not log you in",{ id: toastId});
     }
   };
 
@@ -34,8 +34,6 @@ const Login = () => {
           <h2>Welcome Back</h2>
           <p>Sign in to continue chatting</p>
         </div>
-
-        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
