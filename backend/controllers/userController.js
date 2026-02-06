@@ -22,7 +22,7 @@ exports.searchUsers = async (req, res) => {
         id: true,
         username: true,
         avatarUrl: true,
-        about: true,
+        bio: true,
       },
     });
 
