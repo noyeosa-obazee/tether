@@ -3,10 +3,10 @@ const router = express.Router();
 const passport = require("passport");
 const userController = require("../controllers/userController");
 
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  userController.searchUsers,
-);
+router.use(passport.authenticate("jwt", { session: false }));
+
+router.get("/", userController.searchUsers);
+
+router.put("/profile", userController.updateProfile);
 
 module.exports = router;

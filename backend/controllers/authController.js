@@ -4,7 +4,7 @@ const prisma = require("../config/prisma.js");
 
 exports.register = async (req, res) => {
   try {
-    const { username, email, password, confirmPassword } = req.body;
+    const { username, email, bio, password, confirmPassword } = req.body;
 
     const existingUser = await prisma.user.findFirst({
       where: { OR: [{ email }, { username }] },
@@ -23,6 +23,7 @@ exports.register = async (req, res) => {
       data: {
         username,
         email,
+        bio: bio || null,
         password: hashedPassword,
       },
     });
