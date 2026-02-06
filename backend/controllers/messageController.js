@@ -48,3 +48,62 @@ exports.getMessages = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.editMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+    const userId = req.user.id;
+
+    const message = await prisma.message.findUnique({
+      where: { id },
+    });
+
+    if (!message) return res.status(404).json({ message: "Message not found" });
+
+    if (message.senderId !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to edit this message" });
+    }
+
+    const updatedMessage = await prisma.message.update({
+      where: { id },
+      data: { content },
+      include: {
+        sender: { select: { id: true, username: true, avatarUrl: true } },
+      },
+    });
+
+    res.json(updatedMessage);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const message = await prisma.message.findUnique({
+      where: { id },
+    });
+
+    if (!message) return res.status(404).json({ message: "Message not found" });
+
+    if (message.senderId !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this message" });
+    }
+
+    await prisma.message.delete({
+      where: { id },
+    });
+
+    res.json({ message: "Message deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
