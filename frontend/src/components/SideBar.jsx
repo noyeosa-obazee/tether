@@ -1,14 +1,63 @@
-import React, { useContext } from "react";
+import { useState, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import "../App.css";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
-const Sidebar = () => {
+const Sidebar = ({ onSelectChat }) => {
   const { user, logout } = useContext(AuthContext);
+  const [conversations, setConversations] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const conversations = [
-    { id: 1, name: "Superman", lastMessage: "See you tomorrow!" },
-    { id: 2, name: "Wonder Woman", lastMessage: "Meeting is at 5." },
-  ];
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
+  const fetchConversations = async () => {
+    try {
+      const res = await api.get("/conversations");
+      setConversations(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.error("Failed to load chats");
+    }
+  };
+
+  const handleSearch = async (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    if (term.length > 0) {
+      setLoading(true);
+      try {
+        const res = await api.get(`/users?search=${term}`);
+        setSearchResults(res.data);
+      } catch (err) {
+        console.error("Search failed");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const startChat = async (participantId) => {
+    try {
+      const res = await api.post("/conversations", { participantId });
+
+      const newChat = res.data;
+      onSelectChat(newChat);
+
+      setSearchTerm("");
+      setSearchResults([]);
+      fetchConversations();
+    } catch (err) {
+      toast.error("Could not start chat");
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -33,31 +82,66 @@ const Sidebar = () => {
           type="text"
           placeholder="Search users..."
           className="search-input"
+          value={searchTerm}
+          onChange={handleSearch}
         />
       </div>
 
       <div className="conversation-list">
-        {conversations.map((chat) => (
-          <div key={chat.id} className="conversation-item">
-            <div
-              className="avatar-circle"
-              style={{
-                backgroundColor: "#ccc",
-                width: "35px",
-                height: "35px",
-                fontSize: "1rem",
-              }}
-            >
-              {chat.name.charAt(0)}
-            </div>
-            <div>
-              <div style={{ fontWeight: "600" }}>{chat.name}</div>
-              <div style={{ fontSize: "0.85rem", color: "#666" }}>
-                {chat.lastMessage}
+        {searchTerm.length > 0 ? (
+          <div>
+            {loading && (
+              <div style={{ padding: "10px", color: "#666" }}>Searching...</div>
+            )}
+            {searchResults.map((u) => (
+              <div
+                key={u.id}
+                onClick={() => startChat(u.id)}
+                className="conversation-item"
+              >
+                <div className="avatar-circle" style={{ background: "#ccc" }}>
+                  {u.username.charAt(0)}
+                </div>
+                <div>{u.username}</div>
               </div>
-            </div>
+            ))}
+            {!loading && searchResults.length === 0 && (
+              <div style={{ padding: "10px", color: "#666" }}>
+                No users found
+              </div>
+            )}
           </div>
-        ))}
+        ) : (
+          conversations.map((chat) => {
+            const friend = chat.participants.find((p) => p.id !== user.id);
+            const lastMsg = chat.messages[0]?.content || "No messages yet";
+            return (
+              <div
+                key={chat.id}
+                className="conversation-item"
+                onClick={() => startChat(friend.id)}
+              >
+                <div
+                  className="avatar-circle"
+                  style={{
+                    backgroundColor: "#ccc",
+                    width: "35px",
+                    height: "35px",
+                    fontSize: "1rem",
+                  }}
+                >
+                  {friend?.username.charAt(0)}
+                </div>
+                <div>
+                  <div style={{ fontWeight: "600" }}>{friend?.username}</div>
+                  <div style={{ fontSize: "0.85rem", color: "#666" }}>
+                    {lastMsg}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
