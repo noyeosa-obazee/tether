@@ -1,0 +1,78 @@
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import "../App.css";
+
+const Login = () => {
+  const [formData, setFormData] = useState({ identifier: "", password: "" });
+  const [error, setError] = useState("");
+
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const result = await login(formData.identifier, formData.password);
+
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
+      setError(result.message || "Login failed");
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to continue chatting</p>
+        </div>
+
+        {error && <div className="error-message">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label>Email or Username</label>
+            <input
+              type="text"
+              name="identifier"
+              placeholder="Enter email or username"
+              value={formData.identifier}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-primary">
+            Sign In
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          Don't have an account? <Link to="/register">Sign Up</Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
