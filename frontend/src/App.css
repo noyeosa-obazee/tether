@@ -270,3 +270,21 @@
   cursor: pointer;
   font-weight: 600;
 }
+
+.loading-screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  z-index: 9999;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useContext } from "react";
+import { ClipLoader } from "react-spinners";
 import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
@@ -17,11 +18,13 @@ const Sidebar = ({ onSelectChat }) => {
 
   const fetchConversations = async () => {
     try {
+      setLoading(true);
       const res = await api.get("/conversations");
       setConversations(res.data);
-      console.log(res.data);
     } catch (err) {
-      console.error("Failed to load chats");
+      toast.error("Failed to load chats");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,7 +38,7 @@ const Sidebar = ({ onSelectChat }) => {
         const res = await api.get(`/users?search=${term}`);
         setSearchResults(res.data);
       } catch (err) {
-        console.error("Search failed");
+        toast.error("Failed to search");
       } finally {
         setLoading(false);
       }
@@ -91,7 +94,9 @@ const Sidebar = ({ onSelectChat }) => {
         {searchTerm.length > 0 ? (
           <div>
             {loading && (
-              <div style={{ padding: "10px", color: "#666" }}>Searching...</div>
+              <div>
+                <BeatLoader color="#007bff" size={15} />
+              </div>
             )}
             {searchResults.map((u) => (
               <div
@@ -110,6 +115,10 @@ const Sidebar = ({ onSelectChat }) => {
                 No users found
               </div>
             )}
+          </div>
+        ) : loading ? (
+          <div className="loading">
+            <ClipLoader size={20} />
           </div>
         ) : (
           conversations.map((chat) => {

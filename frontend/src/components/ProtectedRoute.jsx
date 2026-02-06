@@ -1,12 +1,15 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
 import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    <div className="loading-screen">
+      <BeatLoader color="#007bff" size={15} />
+    </div>;
   }
 
   if (!user) {

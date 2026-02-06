@@ -4,6 +4,7 @@ import ChatWindow from "../components/ChatWindow";
 
 const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);
+
   return (
     <div className="dashboard-container">
       <Sidebar onSelectChat={setSelectedChat} />
