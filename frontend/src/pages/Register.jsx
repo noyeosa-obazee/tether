@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
@@ -20,20 +21,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const toastId = toast.loading("Creating your account...");
+    const toastId = toast.loading("Creating your account...");
 
     if (formData.password !== formData.confirmPassword) {
-      // toast.error("Passwords do not match",{ id: toastId});
+      toast.error("Passwords do not match", { id: toastId });
       return;
     }
 
     const result = await register(formData);
 
     if (result.success) {
-      // toast.success("Account created successfully",{ id: toastId})
+      toast.success("Account created successfully", { id: toastId });
       navigate("/login");
     } else {
-      // toast.error(result.message || "Registration failed",{ id: toastId});
+      toast.error(result.message || "Registration failed", { id: toastId });
     }
   };
 

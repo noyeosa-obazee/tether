@@ -1,6 +1,8 @@
 import { useState, useContext } from "react";
+import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../App.css";
 
 const Login = () => {
@@ -15,15 +17,15 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const toastId = toast.loading("Logging in...");
+    const toastId = toast.loading("Logging in...");
 
     const result = await login(formData.identifier, formData.password);
 
     if (result.success) {
-      // toast.success("Logged in successfully",{ id: toastId});
+      toast.success("Logged in successfully", { id: toastId });
       navigate("/dashboard");
     } else {
-      // toast.error("Could not log you in",{ id: toastId});
+      toast.error("Could not log you in", { id: toastId });
     }
   };
 
