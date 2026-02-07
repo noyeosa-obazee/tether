@@ -4,6 +4,7 @@ import { ClipLoader } from "react-spinners";
 import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import EditProfileModal from "./EditProfileModal";
 
 const Sidebar = ({ onSelectChat }) => {
   const { user, logout } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const Sidebar = ({ onSelectChat }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   useEffect(() => {
     fetchConversations();
@@ -66,18 +68,52 @@ const Sidebar = ({ onSelectChat }) => {
     <div className="sidebar">
       <div className="sidebar-header">
         <div className="user-profile">
-          <div className="avatar-circle">
-            {user?.username?.charAt(0).toUpperCase()}
+          {user?.avatarUrl ? (
+            <img
+              src={user.avatarUrl}
+              alt="Avatar"
+              className="avatar-circle"
+              style={{ objectFit: "cover" }}
+            />
+          ) : (
+            <div className="avatar-circle">
+              {user?.username?.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span>{user?.username}</span>
+
+            <span
+              style={{
+                fontSize: "0.75rem",
+                color: "#666",
+                fontWeight: "normal",
+              }}
+            >
+              {user?.about || "No bio yet"}
+            </span>
           </div>
-          <span>{user?.username}</span>
         </div>
-        <button
-          onClick={logout}
-          className="btn-primary"
-          style={{ padding: "5px 10px", fontSize: "0.8rem" }}
-        >
-          Log Out
-        </button>
+        <div className="btn-flex">
+          <button
+            onClick={() => setShowProfileModal(true)}
+            className="btn-primary edit-btn"
+            style={{
+              padding: "4px 10px",
+              fontSize: "0.8rem",
+            }}
+          >
+            <small>Edit Profile</small>
+          </button>
+
+          <button
+            onClick={logout}
+            className="btn-primary log-out"
+            style={{ padding: "4px 10px", fontSize: "0.8rem" }}
+          >
+            <small>Log Out</small>
+          </button>
+        </div>
       </div>
 
       <div className="sidebar-search">
@@ -152,6 +188,10 @@ const Sidebar = ({ onSelectChat }) => {
           })
         )}
       </div>
+
+      {showProfileModal && (
+        <EditProfileModal onClose={() => setShowProfileModal(false)} />
+      )}
     </div>
   );
 };

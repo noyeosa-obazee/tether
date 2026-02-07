@@ -25,7 +25,7 @@ const Login = () => {
       toast.success("Logged in successfully", { id: toastId });
       navigate("/dashboard");
     } else {
-      toast.error("Could not log you in", { id: toastId });
+      toast.error(result.message, { id: toastId });
     }
   };
 
