@@ -103,7 +103,7 @@ const ChatWindow = ({ chat }) => {
               <ClipLoader size={20} color="white" />
             </div>
           ) : (
-            <span>Send</span>
+            <span>Send ➣</span>
           )}
         </button>
       </form>
