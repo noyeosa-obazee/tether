@@ -2,12 +2,14 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 import "../App.css";
 
 const ChatWindow = ({ chat }) => {
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef(null);
 
   const friend = chat?.participants?.find((p) => p.id !== user.id);
@@ -36,11 +38,13 @@ const ChatWindow = ({ chat }) => {
 
   const handleSend = async (e) => {
     e.preventDefault();
+
     if (!newMessage.trim()) return;
 
     try {
       // Optimistic UI:  append the message immediately here before the server replies
       // But for now, I will wait for the server response
+      setIsSending(true);
       const res = await api.post("/messages", {
         conversationId: chat.id,
         content: newMessage,
@@ -50,6 +54,8 @@ const ChatWindow = ({ chat }) => {
       setNewMessage("");
     } catch (err) {
       toast.error("Failed to send");
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -92,7 +98,13 @@ const ChatWindow = ({ chat }) => {
           onChange={(e) => setNewMessage(e.target.value)}
         />
         <button type="submit" className="btn-send">
-          Send
+          {isSending ? (
+            <div className="loading">
+              <ClipLoader size={20} color="white" />
+            </div>
+          ) : (
+            <span>Send</span>
+          )}
         </button>
       </form>
     </div>

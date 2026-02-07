@@ -76,7 +76,7 @@ const Sidebar = ({ onSelectChat }) => {
           className="btn-primary"
           style={{ padding: "5px 10px", fontSize: "0.8rem" }}
         >
-          Logout
+          Log Out
         </button>
       </div>
 
