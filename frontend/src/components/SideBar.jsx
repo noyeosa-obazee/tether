@@ -90,7 +90,7 @@ const Sidebar = ({ onSelectChat }) => {
                 fontWeight: "normal",
               }}
             >
-              {user?.about || "No bio yet"}
+              {user?.bio || "No bio yet"}
             </span>
           </div>
         </div>

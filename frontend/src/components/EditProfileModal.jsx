@@ -58,8 +58,8 @@ const EditProfileModal = ({ onClose }) => {
             <label>About (Bio)</label>
             <input
               type="text"
-              name="about"
-              value={formData.about}
+              name="bio"
+              value={formData.bio}
               onChange={handleChange}
               placeholder="e.g. Sleeping in the Batcave"
             />

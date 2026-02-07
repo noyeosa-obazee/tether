@@ -69,7 +69,20 @@ const ChatWindow = ({ chat }) => {
           >
             {(friend?.username || "?").charAt(0).toUpperCase()}
           </div>
-          <span>{friend?.username || "Unknown User"}</span>
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span>{friend?.username}</span>
+
+            <span
+              style={{
+                fontSize: "0.75rem",
+                color: "#666",
+                fontWeight: "normal",
+              }}
+            >
+              {friend?.bio || "No bio yet"}
+            </span>
+          </div>
         </div>
       </div>
 
