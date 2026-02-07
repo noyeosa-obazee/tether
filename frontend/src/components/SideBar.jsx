@@ -56,7 +56,7 @@ const Sidebar = ({ onSelectChat }) => {
 
       setSearchTerm("");
       setSearchResults([]);
-      fetchConversations();
+      // fetchConversations();
     } catch (err) {
       toast.error("Could not start chat");
     }
