@@ -3,7 +3,6 @@ import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
-import "../App.css";
 
 const ChatWindow = ({ chat }) => {
   const { user } = useContext(AuthContext);
