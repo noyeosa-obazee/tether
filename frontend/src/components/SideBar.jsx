@@ -94,8 +94,8 @@ const Sidebar = ({ onSelectChat }) => {
         {searchTerm.length > 0 ? (
           <div>
             {loading && (
-              <div>
-                <BeatLoader color="#007bff" size={15} />
+              <div className="loading">
+                <ClipLoader size={20} />
               </div>
             )}
             {searchResults.map((u) => (
