@@ -4,7 +4,7 @@ import api from "../api/axios";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 
-const ChatWindow = ({ chat, onBack }) => {
+const ChatWindow = ({ chat, onBack, onToggleSidebar, isSidebarOpen }) => {
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -64,6 +64,9 @@ const ChatWindow = ({ chat, onBack }) => {
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <button onClick={onBack} className="back-button">
             &#8592;
+          </button>
+          <button onClick={onToggleSidebar} className="desktop-toggle">
+            {isSidebarOpen ? "←" : "→"}
           </button>
           <div
             className="avatar-circle"

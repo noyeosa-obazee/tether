@@ -4,14 +4,26 @@ import ChatWindow from "../components/ChatWindow";
 
 const Dashboard = () => {
   const [selectedChat, setSelectedChat] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className="dashboard-container">
-      <div className={`sidebar-wrapper ${selectedChat ? "mobile-hidden" : ""}`}>
+      <div
+        className={`sidebar-wrapper ${!isSidebarOpen ? "closed" : ""} ${selectedChat ? "mobile-hidden" : ""}`}
+      >
         <Sidebar onSelectChat={setSelectedChat} />
       </div>
       {selectedChat ? (
-        <ChatWindow chat={selectedChat} onBack={() => setSelectedChat(null)} />
+        <ChatWindow
+          chat={selectedChat}
+          onBack={() => setSelectedChat(null)}
+          onToggleSidebar={toggleSidebar}
+          isSidebarOpen={isSidebarOpen}
+        />
       ) : (
         <div className="chat-window empty-state">
           <div style={{ margin: "auto", textAlign: "center", color: "#888" }}>
