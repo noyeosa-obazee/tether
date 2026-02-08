@@ -7,9 +7,11 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Sidebar onSelectChat={setSelectedChat} />
+      <div className={`sidebar-wrapper ${selectedChat ? "mobile-hidden" : ""}`}>
+        <Sidebar onSelectChat={setSelectedChat} />
+      </div>
       {selectedChat ? (
-        <ChatWindow chat={selectedChat} />
+        <ChatWindow chat={selectedChat} onBack={() => setSelectedChat(null)} />
       ) : (
         <div className="chat-window empty-state">
           <div style={{ margin: "auto", textAlign: "center", color: "#888" }}>
