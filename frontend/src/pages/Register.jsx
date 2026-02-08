@@ -73,7 +73,7 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label>Bio (optionl)</label>
+            <label>Bio (optional)</label>
             <input
               type="text"
               name="bio"
